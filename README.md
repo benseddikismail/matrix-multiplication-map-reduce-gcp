@@ -13,11 +13,16 @@ Let $$A$$  and $$B$$ be the matrices to be multiplied.
 Let $$i$$ represent the indices of the rows of $$A$$, $$j$$: columns of $$A$$ as well as rows of $$B$$, $$k$$: columns of $$B$$.
 
 1. **Map**
+   
 For $$A$$, map key ($$i$$, $$k$$) to ($$A$$, $$j$$, $$A_{ij}$$ ).
 For $$B$$, map key ($$i$$, $$k$$) to ($$B$$, $$j$$, $$B_{jk}$$).
-2. **Group by**
+
+3. **Group by**
+   
 Group the output of mappers by key. For example, (0, 0): [($$A$$, 0, 25), ($$B$$, 1, 63),...]
-3. **Reduce**
+
+5. **Reduce**
+   
 For key ($$i$$, $$k$$), multiply values $$A_{ij}$$ and $$B_{jk}$$ sharing the same $$j$$, then sum everything up.
 The result is the value at position ($$i$$, $$k$$) of the resulting matrix.
 
@@ -36,7 +41,8 @@ PoolExecutor. Chunks of matrices A and B are sent in parallel to each mapper. Si
 reducer calls are launched in parallel. This helps reduce the time required for processing by leveraging concurrency. Another effective optimization technique is the use of smaller matrix chunk sizes that can fit into memory. By doing this, the chunks can be directly passed to the mappers and reducers, rather than first storing them in a cloud bucket. This approach reduces the overhead associated with reading and writing from cloud storage, as the mappers and reducers can immediately process the data they receive. As a result, the computation becomes faster and more efficient, especially for large scale matrix multiplications where frequent storage access could otherwise introduce significant latency.
 ### Performance
 To test the performance of the solution, a test script under the test/ directory evaluates the time it takes to multiply two matrices of increasing sizes (from 4 x 4 to 200 x 200). For reference, a script running on a VM instance is used to perform matrix multiplication using numpy on the same matrices. The performance of both solutions can be summarized in the following figure.
-<img width="512" alt="detection_ss" src="https://github.com/benseddikismail/image-processing-and-recognition/blob/main/img/injected_form.png">
+<img width="512" alt="detection_ss" src="https://github.com/benseddikismail/matrix-multiplication-map-reduce-gcp/blob/main/test/performance_comparison.png">
+
 The matrix multiplication solution on the VM instance significantly outperforms the MapReduce
 approach, highlighting several key factors that contribute to this performance disparity. Primarily, the efficiency of NumPy in matrix multiplication plays a crucial role, leveraging highly optimized algorithms and low-level CPU optimizations for rapid computations.
 
